@@ -1,0 +1,37 @@
+.list {
+  height: calc(100vh - 200rpx);
+
+  .appointment-item {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 30rpx;
+    margin-bottom: 20rpx;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+
+    .service-name {
+      font-size: 36rpx;
+      font-weight: bold;
+      margin-bottom: 16rpx;
+    }
+
+    .date-time {
+      font-size: 28rpx;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  .btn-area{
+    padding-top: 10rpx;
+  }
+  .new-btn {
+    float: right;
+  }
+}
