@@ -1,14 +1,17 @@
-// src/layouts/MainLayout.tsx
 import { View, Text } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import React, {PropsWithChildren, useEffect, useState} from 'react'
 import { useUser } from '../context/userContext';
 import './main.scss'
 
 // 定义不需要 Layout 的页面
-const NO_LAYOUT_PAGES = ['/pages/login/index']
+const NO_LAYOUT_PAGES = ['/pages/login/login']
 
 const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
+  const currentPage = Taro.getCurrentInstance().router?.path || ''
+  // removed query
+  const indexOfQuery = currentPage.indexOf('?')
+  const currentPagePath = currentPage.substring(0, indexOfQuery)
   const [showLayout, setShowLayout] = useState(false)
   const { user, clearUser } = useUser();
 
@@ -18,18 +21,12 @@ const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
     Taro.navigateTo({ url: '/pages/login/login' })
   }
 
-  useDidShow(() => {
-    // 检查当前页面是否需要 Layout
-    const currentPage = Taro.getCurrentPages().pop()?.route || ''
-    setShowLayout(!NO_LAYOUT_PAGES.includes(`/${currentPage}`))
-  })
-
   useEffect(() => {
-    console.log('user info changed:', user)
-  }, ['user'])
+    setShowLayout(!NO_LAYOUT_PAGES.includes(currentPagePath))
+  }, [currentPage])
 
   if (!showLayout) {
-    return <>{children}</>
+    return (<View>{children}</View>)
   }
 
   return (
