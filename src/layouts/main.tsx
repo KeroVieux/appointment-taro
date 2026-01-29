@@ -4,12 +4,10 @@ import React, {PropsWithChildren, useEffect, useState} from 'react'
 import { useUser } from '../context/userContext';
 import './main.scss'
 
-// 定义不需要 Layout 的页面
 const NO_LAYOUT_PAGES = ['/pages/login/login']
 
 const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const currentPage = Taro.getCurrentInstance().router?.path || ''
-  // removed query
   const indexOfQuery = currentPage.indexOf('?')
   const currentPagePath = currentPage.substring(0, indexOfQuery)
   const [showLayout, setShowLayout] = useState(false)
@@ -31,7 +29,6 @@ const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <View className='main-layout'>
-      {/* 顶部导航栏 */}
       <View className='header'>
         <View className='user-info'>
           {user ? (
@@ -45,12 +42,10 @@ const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
         </View>
       </View>
 
-      {/* 内容区域 - 子页面在这里渲染 */}
       <View className='content'>
         {children}
       </View>
 
-      {/* 底部 TabBar（可选） */}
       <View className='tabbar'>
         <View
           className='tab-item'
