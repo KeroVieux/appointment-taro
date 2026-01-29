@@ -1,25 +1,32 @@
 // src/layouts/MainLayout.tsx
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import React, { PropsWithChildren, useState } from 'react'
+import React, {PropsWithChildren, useEffect, useState} from 'react'
+import { useUser } from '../context/userContext';
 import './main.scss'
 
 // 定义不需要 Layout 的页面
 const NO_LAYOUT_PAGES = ['/pages/login/index']
 
 const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<any>(null)
   const [showLayout, setShowLayout] = useState(false)
+  const { user, clearUser } = useUser();
+
+  const handleLogout = () => {
+    Taro.removeStorageSync('user')
+    clearUser()
+    Taro.navigateTo({ url: '/pages/login/login' })
+  }
 
   useDidShow(() => {
     // 检查当前页面是否需要 Layout
     const currentPage = Taro.getCurrentPages().pop()?.route || ''
     setShowLayout(!NO_LAYOUT_PAGES.includes(`/${currentPage}`))
-
-    // 获取用户信息
-    const userInfo = Taro.getStorageSync('user')
-    setUser(userInfo)
   })
+
+  useEffect(() => {
+    console.log('user info changed:', user)
+  }, ['user'])
 
   if (!showLayout) {
     return <>{children}</>
@@ -32,7 +39,7 @@ const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
         <View className='user-info'>
           {user ? (
             <>
-              <Text className='username'>{user.name || user.phone}</Text>
+              <Text className='username'>{user.phone}</Text>
               <View className='logout' onClick={handleLogout}>退出</View>
             </>
           ) : (
@@ -69,12 +76,6 @@ const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
       </View>
     </View>
   )
-
-  function handleLogout() {
-    Taro.removeStorageSync('user')
-    Taro.removeStorageSync('token')
-    Taro.reLaunch({ url: '/pages/login/index' })
-  }
 }
 
 export default MainLayout

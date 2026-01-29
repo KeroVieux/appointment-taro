@@ -1,10 +1,12 @@
 import {Button, View, Input, Label, Form} from '@tarojs/components'
 import { request, setStorageSync, navigateTo } from '@tarojs/taro'
 import { useState } from 'react'
+import { useUser } from '../../context/userContext';
 
 export default function Login () {
   const [phone, setPhone] = useState<string>('1316233311')
   const [code, setCode] = useState<string>('123456')
+  const { setUser } = useUser();
   const submit = async () => {
     const responseData = await request({
       url: `${process.env.TARO_APP_BASE_URL}/login`,
@@ -13,6 +15,10 @@ export default function Login () {
     })
     if (responseData.statusCode === 200) {
       setStorageSync('token', responseData.data.token)
+      setStorageSync('user', phone)
+      setUser({
+        phone,
+      })
       await navigateTo({ url: '/pages/index/index' })
     }
   }

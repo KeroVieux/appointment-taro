@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { useLaunch } from '@tarojs/taro'
 import MainLayout from './layouts/main'
-
+import { UserProvider } from './context/userContext';
 import './app.scss'
 
 function App({ children }: PropsWithChildren<any>) {
@@ -9,8 +9,7 @@ function App({ children }: PropsWithChildren<any>) {
     console.log('App launched.')
   })
 
-  // children 是将要会渲染的页面
-  return (<MainLayout>{children}</MainLayout>)
+  return (<UserProvider><MainLayout>{children}</MainLayout></UserProvider>)
 }
 
 
